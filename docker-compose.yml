@@ -32,8 +32,8 @@ services:
     environment:
       HTTP_ADDR: ":4067"
       POSTGRES_HOST: postgres
-      #DB_PORT: 5432
-      #DB_DSN: postgres://postgres:postgrespw@postgres:5432/user_db?sslmode=disable
+      DB_PORT: 5432
+      DB_DSN: postgres://postgres:postgrespw@postgres:5432/user_db?sslmode=disable
       FILE_NAME: ./test_data.txt
       READ_FREQ: 2s
     links:
