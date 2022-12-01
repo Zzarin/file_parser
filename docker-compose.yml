@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  postgres:
+    restart: always
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgrespw
+      - POSTGRES_DB=user_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - .internal/postgres/data:/var/lib/postgresql/data
+  adminer:
+    restart: always
+    image: adminer:latest
+    container_name: DB-manager
+    depends_on:
+      - postgres
+    ports:
+      - "8045:8080"
+  parser:
+    restart: on-failure
+    depends_on:
+      - postgres
+    build:
+      dockerfile: Dockerfile
+    container_name: parser
+    ports:
+      - "4067:4067"
+    environment:
+      HTTP_ADDR: ":4067"
+      POSTGRES_HOST: postgres
+      #DB_PORT: 5432
+      #DB_DSN: postgres://postgres:postgrespw@postgres:5432/user_db?sslmode=disable
+      FILE_NAME: ./test_data.txt
+      READ_FREQ: 2s
+    links:
+      - postgres
+
+networks:
+  parser-network:
